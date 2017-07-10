@@ -19,16 +19,16 @@ function init() {
 
   scene = new THREE.Scene();
 
-  var material = new THREE.MeshPhongMaterial( { color: 0xffffff, dithering: true } );
-	var geometry = new THREE.BoxGeometry( 2000, 1, 2000 );
-	var floor = new THREE.Mesh( geometry, material );
-	floor.position.set( 0, - 1, 0 );
+  var floorMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, dithering: true } );
+	var floorGeometry = new THREE.BoxGeometry( 2000, 1, 2000 );
+	var floor = new THREE.Mesh( floorGeometry, floorMaterial );
+	floor.position.set( 0, 0, -500 );
 	floor.receiveShadow = true;
 	scene.add( floor );
 
 
   var cubeGeometry = new THREE.CubeGeometry(200, 200, 200);
-  var cubeMaterial = new THREE.MeshLambertMaterial( { color:0xffffff } );
+  var cubeMaterial = new THREE.MeshStandardMaterial( { color:0xffffff } );
 
   cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
   cube.position.set(0,250,0);
@@ -38,18 +38,21 @@ function init() {
   var light = new THREE.AmbientLight( 0xffffff, 0.3 );
   scene.add( light );
 
-  var spotLight = new THREE.SpotLight( 0xffffff, 0.5 );
-  spotLight.position.set( 100, 1000, 100 );
+  var spotLight = new THREE.SpotLight( 0xffffff, 0.8 );
+  spotLight.position.set( 100, 300, 700 );
+  spotLight.angle = 0.75;
+  spotLight.penumbra = 0.35;
+  spotLight.distance = 2085;
+
 
   spotLight.castShadow = true;
-
-  spotLight.AmbientLight = 0.5;
+  // spotLight.AmbientLight = 0.5;
   spotLight.shadow.darkness = 0.5;
   spotLight.shadow.mapSize.width = 1024;
   spotLight.shadow.mapSize.height = 1024;
-
-  spotLight.shadow.camera.near = 1500;
-  spotLight.shadow.camera.far = 4000;
+  //
+  spotLight.shadow.camera.near = 0.1;
+  spotLight.shadow.camera.far = 2000;
   spotLight.shadow.camera.fov = 30;
   spotLight.decay = 2;
 
@@ -57,7 +60,7 @@ function init() {
 
   lightHelper = new THREE.SpotLightHelper( spotLight );
 	scene.add( lightHelper );
-
+  //
   shadowCameraHelper = new THREE.CameraHelper( spotLight.shadow.camera );
 	scene.add( shadowCameraHelper );
 
@@ -71,9 +74,6 @@ function init() {
   container = document.getElementById( 'canvas' );
   container.appendChild( renderer.domElement );
   window.addEventListener( 'resize', onWindowResize, false );
-
-  // controls = new THREE.OrbitControls( cube );
-  // controls.addEventListener( 'change', render );
 }
 
 function onWindowResize() {
@@ -95,107 +95,10 @@ function move() {
 }
 
 function render() {
-  // cube.rotation.x += 0.005;
-  // cube.rotation.y += 0.006;
   lightHelper.update();
 	shadowCameraHelper.update();
 
   renderer.render( scene, camera );
 }
-
-
-// function buildGui() {
-// 	gui = new dat.GUI();
-// 	var params = {
-// 		'light color': spotLight.color.getHex(),
-// 		intensity: spotLight.intensity,
-// 		distance: spotLight.distance,
-// 		angle: spotLight.angle,
-// 		penumbra: spotLight.penumbra,
-// 		decay: spotLight.decay
-// 	}
-// 	gui.addColor( params, 'light color' ).onChange( function ( val ) {
-// 		spotLight.color.setHex( val );
-// 		render();
-// 	} );
-// 	gui.add( params, 'intensity', 0, 2 ).onChange( function ( val ) {
-// 		spotLight.intensity = val;
-// 		render();
-// 	} );
-// 	gui.add( params, 'distance', 50, 200 ).onChange( function ( val ) {
-// 		spotLight.distance = val;
-// 		render();
-// 	} );
-// 	gui.add( params, 'angle', 0, Math.PI / 3 ).onChange( function ( val ) {
-// 		spotLight.angle = val;
-// 		render();
-// 	} );
-// 	gui.add( params, 'penumbra', 0, 1 ).onChange( function ( val ) {
-// 		spotLight.penumbra = val;
-// 		render();
-// 	} );
-// 	gui.add( params, 'decay', 1, 2 ).onChange( function ( val ) {
-// 		spotLight.decay = val;
-// 		render();
-// 	} );
-// 	gui.open();
-// }
-
-  // function render() {
-  //   // cube.rotation.x += 0.005;
-  //   // cube.rotation.y += 0.006;
-  //   renderer.render(scene, camera);
-  //   controls.update();
-  //   requestAnimationFrame(render);
-  //
-  // }
-
-  // requestAnimationFrame(render);
-
-
-  //
-  // var renderer = new THREE.WebGLRenderer({canvas: document.getElementById('canvas'), antialias: true});
-  // renderer.setClearColor(0xe1f2e8);
-  // renderer.setPixelRatio(window.devicePixelRatio);
-  // renderer.setSize(window.innerWidth, window.innerHeight);
-  //
-  // var camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 3000);
-  // camera.position.set(0,0,0);
-  //
-  // var scene = new THREE.Scene();
-  // var light = new THREE.AmbientLight(0xffffff, 0.5);
-  // scene.add(light);
-  //
-  // var pointLight = new THREE.PointLight(0xffffff, 0.5);
-  // scene.add(pointLight);
-  //
-  // var controls = new THREE.OrbitControls( camera, renderer.domElement );
-  // controls.addEventListener( 'change', renderer );
-  //
-  // console.log(controls);
-  //
-  // var plane = new THREE.GridHelper(100, 100);
-  // scene.add(plane);
-  //
-  //
-  // var geometry = new THREE.CubeGeometry(120, 120, 120);
-  // var material = new THREE.MeshLambertMaterial({color:"aquamarine", wireframe:false});
-  // var cube = new THREE.Mesh(geometry, material);
-  // cube.position.set(0,0,-1000);
-  //
-  // scene.add(cube);
-  //
-  // function render() {
-  //   // cube.rotation.x += 0.005;
-  //   // cube.rotation.y += 0.006;
-  //   renderer.render(scene, camera);
-  //   controls.update();
-  //   requestAnimationFrame(render);
-  //
-  // }
-  //
-  // requestAnimationFrame(render);
-
-
 
 };
